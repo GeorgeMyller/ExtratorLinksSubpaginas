@@ -28,11 +28,14 @@ def get_subpage_links(base_url):
     base_netloc = urlparse(base_url).netloc # Domínio da URL base
 
     # Encontra todas as tags <a> (âncoras/links)
+    from bs4.element import Tag
     for link_tag in soup.find_all('a', href=True):
-        href = link_tag['href']
+        if not isinstance(link_tag, Tag):
+            continue
+        href = link_tag.get('href')
 
         # Converte o link para uma URL absoluta
-        full_url = urljoin(base_url, href)
+        full_url = urljoin(base_url, str(href))
 
         # Analisa a URL completa para verificar o domínio e o fragmento (âncora)
         parsed_full_url = urlparse(full_url)
@@ -63,7 +66,7 @@ if __name__ == "__main__":
     # Observe que para sites com conteúdo muito dinâmico (JavaScript),
     # pode ser necessário usar bibliotecas como Selenium para simular um navegador.
     # No entanto, este script deve funcionar para a maioria dos sites com links HTML tradicionais.
-    url_exemplo = "https://docs.crewai.com/introduction"
+    url_exemplo = "https://exemplo.com"  # Substitua pela URL desejada
     links_encontrados = get_subpage_links(url_exemplo)
 
 
